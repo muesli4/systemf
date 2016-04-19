@@ -80,7 +80,7 @@ termP = appP
         unit  ::= 'U'
         var   ::= nat
         poly  ::= 'forall' '.' type
-        arrow ::= type+
+        arrow ::= type ('->' type)+
 
 -}
 typeP :: Parser Type
