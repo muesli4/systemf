@@ -39,7 +39,7 @@ abs#U.abs#U.1
 
 Application of terms (parenthesis can be used sparingly):
 ```
-(abs#U.0) abs#U.0
+(abs#U -> U.0) (abs#U.0) U
 ```
 
 Polymorphic identity function (type variables also work with De Bruijn encoding):
