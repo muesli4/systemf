@@ -20,10 +20,10 @@ runParser' p = first show . runParser p () srcFileName
     srcFileName = ""
 
 parseTerm :: String -> Either String Term
-parseTerm = runParser' termP
+parseTerm = runParser' (spaces *> termP)
 
 parseType :: String -> Either String Type
-parseType = runParser' typeP
+parseType = runParser' (spaces *> typeP)
 
 {-
     Example terms:
@@ -59,19 +59,19 @@ parseType = runParser' typeP
 -}
 
 parensP :: Parser a -> Parser a
-parensP p = symbol '(' *> p <* symbol ')'
+parensP p = char '(' *> p <* spaces <* char ')'
 
 termP :: Parser Term
 termP = appP
   where
     termP' = unitP <|> varP <|> absP <|> tabsP <|> parensP appP <|> tappP
     -- term parsers
-    unitP  = UnitT <$ symbol 'U'
+    unitP  = UnitT <$ char 'U'
     varP   = VarT <$> natP
-    absP   = AbsT <$ lexeme "abs" <* symbol '#' <*> typeP <*> (symbol '.' *> termP)
-    tabsP  = TypeAbsT <$> (lexeme "tabs" *> symbol '.' *> termP)
-    appP   = chainl1 termP' (AppT <$ space)
-    tappP  = TypeAppT <$ symbol '[' <*> termP' <* space <*> typeP <* symbol ']'
+    absP   = AbsT <$ string "abs" <* spaces <* char '#' <* spaces <*> typeP <*> (char '.' *> spaces *> termP)
+    tabsP  = TypeAbsT <$> (string "tabs" *> spaces *> char '.' *> spaces *> termP)
+    appP   = chainl1 (termP' <* spaces) (pure AppT)
+    tappP  = TypeAppT <$ char '[' <*> termP' <* space <*> typeP <* char ']'
 
 {-
 
@@ -88,20 +88,10 @@ typeP = arrowP
   where
     typeP' = unitP <|> varP <|> polyP <|> parensP arrowP
     -- type parsers
-    unitP  = UnitTy <$ symbol 'U'
-    varP   = VarTy <$> natP
-    polyP  = ForallTy <$ lexeme "forall" <* symbol '.' <*> typeP
-    arrowP = chainr1 typeP' (ArrowTy <$ lexeme "->")
+    unitP  = UnitTy <$ char 'U' <* spaces
+    varP   = VarTy <$> natP <* spaces
+    polyP  = ForallTy <$ string "forall" <* char '.' <*> typeP
+    arrowP = chainr1 typeP' (ArrowTy <$ string "->" <* spaces)
 
 natP :: Parser Int
-natP = read <$> skipP (some digit)
-
--- | Skip all leading whitespaces from a given parser.
-skipP :: Parser a -> Parser a
-skipP p = many space *> p
-
-symbol :: Char -> Parser Char
-symbol = skipP . char
-
-lexeme :: String -> Parser String
-lexeme = skipP . string
+natP = read <$> some digit

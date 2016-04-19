@@ -22,8 +22,9 @@ main = do
                 mapM_ (putStrLn . ("    " ++)) $ lines e
             Right t -> do
                 putStrLn $ "Parsed term: " ++ show t
+                putStrLn $ "Pretty term: " ++ show (ppTerm t)
                 case inferType t of
                     Left ie  -> putStrLn $ "Failed typing: " ++ show (ppInferError ie)
                     Right ty -> do
                         putStrLn $ "Infered type: " ++ show ty
-                        putStrLn $ "Output: " ++ show (ppType ty)
+                        putStrLn $ "Output type: " ++ show (ppType ty)
