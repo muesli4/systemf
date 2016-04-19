@@ -79,7 +79,7 @@ invalidTyVars tVarDepth t = case t of
     UnitTy                  -> []
     VarTy i | i < tVarDepth -> []
             | otherwise     -> [i]
-    ForallTy ty             -> invalidTyVars' ty
+    ForallTy ty             -> invalidTyVars (succ tVarDepth) ty
     ArrowTy fTy aTy         -> nub $ invalidTyVars' fTy ++ invalidTyVars' aTy
   where
     invalidTyVars' = invalidTyVars tVarDepth
