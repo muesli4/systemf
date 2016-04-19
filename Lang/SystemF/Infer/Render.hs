@@ -21,8 +21,12 @@ ppInferError e = case e of
 
 ppAppInferError :: AppInferError -> L.Doc
 ppAppInferError e = case e of
-    NoFun tp -> "Can't apply a term to a non-function type, namely:" <?> ppTyping tp
-    ParamTypeMismatch tye tya -> "Parameter type mismatch: " <?> "expected" L.<+> ppTypeSq tye L.<> ", actual" L.<+> ppTypeSq tya
+    NoFun tp                  ->
+        "Can't apply a term to a non-function type, namely:" <?> ppTyping tp
+    ParamTypeMismatch tye tya ->
+        "Parameter type mismatch: " <?> d
+      where
+        d = "expected" L.<+> ppTypeSq tye L.<> ", actual" L.<+> ppTypeSq tya
 
 ppTypeSq :: Type -> L.Doc
 ppTypeSq = L.squotes . ppType

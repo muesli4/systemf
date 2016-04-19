@@ -23,4 +23,4 @@ ppType ty = case ty of
     UnitTy        -> "U"
     VarTy i       -> int i
     ForallTy ty'  -> "forall." <> ppType ty'
-    ArrowTy ta tb -> ppType ta <+> "->" <+> parens (ppType tb)
+    ArrowTy ta tb -> parens $ ppType ta <+> "->" <+> ppType tb
