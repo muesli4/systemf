@@ -12,7 +12,6 @@ main :: IO ()
 main = do
     args <- getArgs
     mapM_ ((>> putStrLn "") . process) args
-
   where
     process s = do
         putStrLn $ "Input: " ++ show s
