@@ -5,7 +5,7 @@ import Text.PrettyPrint.ANSI.Leijen
 
 import Lang.SystemF
 
-data Expand = Free | Broken
+data Parens = Needed | Optional
 
 ppTerm :: Term -> Doc
 ppTerm = go
@@ -19,8 +19,15 @@ ppTerm = go
         TypeAppT t' ty -> brackets $ go t' <+> ppType ty
 
 ppType :: Type -> Doc
-ppType ty = case ty of
+ppType = ppTypeParens Optional
+
+ppTypeParens :: Parens -> Type -> Doc
+ppTypeParens p ty = case ty of
     UnitTy        -> "U"
     VarTy i       -> int i
     ForallTy ty'  -> "forall." <> ppType ty'
-    ArrowTy ta tb -> parens $ ppType ta <+> "->" <+> ppType tb
+    ArrowTy ta tb -> optParens p $ ppTypeParens Needed ta <+> "->" <+> ppTypeParens Optional tb
+
+optParens :: Parens -> Doc -> Doc
+optParens Needed   = parens
+optParens Optional = id
