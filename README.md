@@ -27,7 +27,7 @@ arrow ::= type ('->' type)+
 
 ## Example terms
 
-Monmorphic identity function:
+Monmorphic identity function on the unit type:
 ```
 abs#U.0
 ```
@@ -37,17 +37,17 @@ Monomorphic constant function:
 abs#U.abs#U.1
 ```
 
-Application of terms:
+Application of terms (parenthesis can be used sparingly):
 ```
 (abs#U.0) abs#U.0
 ```
 
-Polymorphic identity function:
+Polymorphic identity function (type variables also work with De Bruijn encoding):
 ```
 tabs.abs#0.0
 ```
 
-Type application:
+Type application (the term often has to be in parenthesis):
 ```
 [(tabs.abs#0.0) U]
 ```
@@ -59,6 +59,6 @@ abs#U -> U -> U.0 U U
 
 Polymorphic parameter:
 ```
-abs#(forall.0 -> U).abs#forall.0.1 0
+abs#(forall. 0 -> U).abs#U.[1 U] 0
 ```
 
