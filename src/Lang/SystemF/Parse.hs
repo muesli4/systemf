@@ -14,7 +14,7 @@ import Control.Applicative (some)
 type Parser = Parsec String ()
 
 runParser' :: Parser a -> String -> Either String a
-runParser' p = first show . runParser p () srcFileName 
+runParser' p = first show . runParser (p <* spaces <* eof) () srcFileName
   where
     srcFileName :: String
     srcFileName = ""
