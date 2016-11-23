@@ -34,7 +34,7 @@ ppTypeParens :: Parens -> Type -> Doc
 ppTypeParens p ty = case ty of
     UnitTy        -> "U"
     VarTy i       -> int i
-    ForallTy ty'  -> "forall." <> ppType ty'
+    ForallTy ty'  -> optParens p $ "forall." <> ppType ty'
     ArrowTy ta tb -> optParens p $ ppTypeParens Needed ta <+> "->" <+> ppType tb
 
 optParens :: Parens -> Doc -> Doc
