@@ -9,8 +9,9 @@ import qualified Data.List.NonEmpty           as NE
 
 ppInferError :: InferError -> L.Doc
 ppInferError e = case e of
-    InvalidVar _ _               ->
-        "There is no binder for the given index."
+    InvalidVar v d               ->
+        let detail = "index" L.<+> L.int v L.<+> "at depth" L.<+> L.int d
+        in "There is no binder for the given index, namely:" <?> detail
     InvalidApp aie               ->
         ppAppInferError aie
     NoUniversalType tp           ->
