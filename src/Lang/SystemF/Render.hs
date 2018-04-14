@@ -9,14 +9,6 @@ data Parens = Needed | Optional
 
 ppTerm :: Term -> Doc
 ppTerm = ppTermParens Optional
---  where
---    go t = case t of
---        UnitT          -> "U"
---        VarT i         -> int i
---        AbsT ty t'     -> parens $ "abs#" <> ppType ty <> "." <> go t'
---        TypeAbsT t'    -> parens $ "tabs." <> go t'
---        AppT ta tb     -> parens $ go ta <+> go tb
---        TypeAppT t' ty -> brackets $ go t' <+> ppType ty
 
 ppTermParens :: Parens -> Term -> Doc
 ppTermParens p t = case t of
