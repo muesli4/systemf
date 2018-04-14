@@ -4,19 +4,21 @@
 -}
 module Lang.SystemF where
 
-data Term = UnitT
-          | VarT Int
-          | AbsT Type Term
-          | TypeAbsT Term
-          | AppT Term Term
-          | TypeAppT Term Type
-          deriving (Eq, Show)
+data Term
+    = UnitT
+    | VarT Int
+    | AbsT Type Term
+    | TypeAbsT Term
+    | AppT Term Term
+    | TypeAppT Term Type
+    deriving (Eq, Show)
 
-data Type = UnitTy
-          | VarTy Int
-          | ForallTy Type
-          | ArrowTy Type Type
-          deriving (Eq, Show)
+data Type
+    = UnitTy
+    | VarTy Int
+    | ForallTy Type
+    | ArrowTy Type Type
+    deriving (Eq, Show)
 
 -- Replace all type variables bound by the 0th forall quantifier with a given
 -- substitute.

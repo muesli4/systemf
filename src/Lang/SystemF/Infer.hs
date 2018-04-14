@@ -6,32 +6,35 @@ import           Data.List
 import qualified Data.List.NonEmpty as NE
 import qualified Data.IntMap        as IM
 
-data InferEnv = InferEnv
-              { ieDepth     :: Int
-              , ieVars      :: IM.IntMap Type
-              , ieTVarDepth :: Int
-              }
+data InferEnv
+    = InferEnv
+    { ieDepth     :: Int
+    , ieVars      :: IM.IntMap Type
+    , ieTVarDepth :: Int
+    }
 
 data Typing = Typing Term Type deriving Show
 
-data InferError = InvalidVar
-                { ivVar   :: Int
-                , ivDepth :: Int
-                }
-                | InvalidApp AppInferError
-                | NoUniversalType Typing
-                | InvalidTyVars
-                { itvVars  :: NE.NonEmpty Int
-                , itvDepth :: Int
-                }
-                deriving Show
+data InferError
+    = InvalidVar
+    { ivVar   :: Int
+    , ivDepth :: Int
+    }
+    | InvalidApp AppInferError
+    | NoUniversalType Typing
+    | InvalidTyVars
+    { itvVars  :: NE.NonEmpty Int
+    , itvDepth :: Int
+    }
+    deriving Show
 
-data AppInferError = NoFun Typing
-                   | ParamTypeMismatch
-                   { ptmExpected :: Type
-                   , ptmActual   :: Type
-                   }
-                   deriving Show
+data AppInferError
+    = NoFun Typing
+    | ParamTypeMismatch
+    { ptmExpected :: Type
+    , ptmActual   :: Type
+    }
+    deriving Show
 
 -- | Infer the type of a closed term.
 inferType :: Term -> Either InferError Type
