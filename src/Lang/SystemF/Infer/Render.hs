@@ -22,8 +22,10 @@ ppInferError e = case e of
 
 ppAppInferError :: AppInferError -> L.Doc
 ppAppInferError e = case e of
-    NoFun tp                  ->
-        "Can't apply a term to a non-function type, namely:" <?> ppTyping tp
+    NoFun tp t                ->
+        let detail = ppTyping tp L.<> L.comma
+                     L.<+> "but expected a function with argument type" L.<+> ppType t
+        in "Can't apply a term to a non-function type, namely:" <?> detail
     ParamTypeMismatch tye tya ->
         "Parameter type mismatch: " <?> d
       where

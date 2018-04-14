@@ -8,20 +8,27 @@ import qualified Data.IntMap        as IM
 
 data InferEnv
     = InferEnv
+    -- | The amount of nested lambda abstractions we're in.
     { ieDepth     :: Int
+    -- | The types of all available variables.
     , ieVars      :: IM.IntMap Type
+    -- | The amount of nested type lambda abstractions we're in.
     , ieTVarDepth :: Int
     }
 
 data Typing = Typing Term Type deriving Show
 
 data InferError
+    -- | A used variable hasn't been introduced with a lambda expression.
     = InvalidVar
     { ivVar   :: Int
     , ivDepth :: Int
     }
     | InvalidApp AppInferError
+    -- | A type has been applied to a term that doesn't have a universal type.
     | NoUniversalType Typing
+    -- | A type annotation uses type variables that haven't been introduced with
+    -- a type lambda (i.e. universally quantified type).
     | InvalidTyVars
     { itvVars  :: NE.NonEmpty Int
     , itvDepth :: Int
@@ -29,7 +36,12 @@ data InferError
     deriving Show
 
 data AppInferError
-    = NoFun Typing
+    -- | First parameter of an application is not a function.
+    = NoFun
+    { nfFunTyping :: Typing
+    , nfArgTy     :: Type
+    }
+    -- | The argument type doesn't match the type of the applied term.
     | ParamTypeMismatch
     { ptmExpected :: Type
     , ptmActual   :: Type
@@ -65,8 +77,8 @@ inferTypeWith e@(InferEnv depth vs tVarDepth ) t = case t of
         (Right (ArrowTy argTy bodyTy), Right aTy) | argTy == aTy -> Right bodyTy
                                                   | otherwise    ->
             Left $ InvalidApp $ ParamTypeMismatch argTy aTy
-        (Right fTy                   , Right _)                  ->
-            Left $ InvalidApp $ NoFun (Typing tf fTy)
+        (Right fTy                   , Right aTy)                ->
+            Left $ InvalidApp $ NoFun (Typing tf fTy) aTy
         -- TODO combine error messages ?
         (Left e, _)                                              -> Left e
         (_, Left e)                                              -> Left e
