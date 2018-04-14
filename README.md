@@ -1,3 +1,5 @@
+This is a toy implementation of a SystemF type checker. It has been inspired by [the amazing course on programming languages and type systems](http://ps.informatik.uni-tuebingen.de/teaching/ss15/pl2/) by [Prof. Dr. Klaus Ostermann](http://ps.informatik.uni-tuebingen.de/team/ostermann/).
+
 ## Usage
 
 Single terms can be passed to the executable for type checking. For the grammar see the listing below.
@@ -52,7 +54,7 @@ Type application (the term often has to be in parenthesis):
 [(tabs.abs#0.0) U]
 ```
 
-Higher-kinded parameter:
+Function parameter:
 ```
 abs#U -> U -> U.0 U U
 ```
